@@ -1,25 +1,32 @@
 # Tutorial completo: criando um aplicativo Android do zero até o APK no Linux Mint
 
-Este tutorial apresenta um caminho completo para criar um aplicativo Android nativo utilizando **Android Studio + OpenJDK + Gradle + Kotlin + Android SDK**, desde a preparação do Linux Mint até a geração de um arquivo APK.
+Este tutorial apresenta um caminho completo para desenvolver um aplicativo Android nativo no **Linux Mint**, utilizando ferramentas gratuitas e, sempre que possível, de código aberto.
 
-O procedimento foi adaptado para a seguinte configuração:
+O processo utiliza:
 
-* **Sistema:** Linux Mint 22.3 Zena
-* **Base:** Ubuntu 24.04 LTS (Noble)
-* **Arquitetura:** x86_64
-* **Java:** OpenJDK 17.0.19
-* **Android Studio:** 2025.2.3
-* **Ambiente gráfico:** XFCE
+* **Android Studio** — IDE oficial para desenvolvimento Android;
+* **OpenJDK 17** — ambiente Java utilizado pelo projeto;
+* **Gradle** — sistema de automação de build;
+* **Kotlin** — linguagem principal;
+* **Android SDK** — ferramentas e bibliotecas Android;
+* **Android Emulator** — para testes em dispositivo virtual;
+* **ADB** — para comunicação com dispositivos Android;
+* **Jetpack Compose** — para construção moderna da interface.
 
-O objetivo é utilizar ferramentas gratuitas e, sempre que possível, componentes de código aberto.
+O procedimento foi adaptado para um computador com:
 
-> **Nota sobre licenciamento:** Android Studio é disponibilizado gratuitamente pela Google, mas não deve ser classificado simplesmente como um projeto totalmente open-source. Kotlin, Gradle, várias bibliotecas Android e grande parte do ecossistema utilizado no desenvolvimento são projetos open-source.
+* Linux Mint;
+* Ubuntu 24.04 (Noble) como base;
+* arquitetura x86_64;
+* processador Intel;
+* Android Studio instalado através do PPA;
+* OpenJDK 17.
 
 ---
 
 # 1. Preparação do sistema
 
-## 1.1. Atualizar os repositórios e o sistema
+## 1.1 Atualizar o sistema
 
 Abra o Terminal:
 
@@ -29,105 +36,81 @@ sudo apt update && sudo apt upgrade -y
 
 ---
 
-## 1.2. Instalar o OpenJDK 17
+## 1.2 Instalar o OpenJDK 17
 
-Instale o Java 17:
-
-```bash
-sudo apt install -y openjdk-17-jdk openjdk-17-jre
-```
-
-O tutorial original incluía diversas bibliotecas 32-bit, como:
-
-```text
-libc6:i386
-libncurses5:i386
-libstdc++6:i386
-lib32z1
-libbz2-1.0:i386
-```
-
-**Esses pacotes não devem ser instalados automaticamente neste sistema.**
-
-Em particular, `libncurses5:i386` não está disponível nos repositórios padrão utilizados pelo Linux Mint 22.3/Ubuntu 24.04.
-
-Portanto, para a instalação atual, utilizamos somente:
+Instale o Java utilizado pelo ambiente de desenvolvimento:
 
 ```bash
 sudo apt install -y openjdk-17-jdk openjdk-17-jre
 ```
 
-Dependências adicionais só devem ser instaladas posteriormente se alguma ferramenta efetivamente solicitar.
-
----
-
-## 1.3. Verificar o Java
-
-Execute:
+Verifique:
 
 ```bash
 java -version
 ```
 
-e:
+E:
 
 ```bash
 javac -version
-```
-
-A configuração utilizada neste computador é:
-
-```text
-java  → OpenJDK 17.0.19
-javac → OpenJDK 17.0.19
 ```
 
 O resultado esperado é semelhante a:
 
 ```text
-openjdk version "17.0.19"
+openjdk version "17.0.x"
+javac 17.0.x
 ```
 
-e:
+### Observação sobre versões diferentes do Java
 
-```text
-javac 17.0.19
+Caso o sistema possua simultaneamente Java 17 e Java 21, `java` e `javac` podem acabar apontando para versões diferentes.
+
+Verifique:
+
+```bash
+which java
+which javac
 ```
 
-### Se `java` e `javac` estiverem usando versões diferentes
+E:
 
-O Linux pode possuir mais de uma versão do Java instalada.
+```bash
+readlink -f "$(which java)"
+readlink -f "$(which javac)"
+```
 
-Para selecionar o Java 17 como padrão:
+Se necessário, selecione o Java 17:
 
 ```bash
 sudo update-alternatives --config java
 ```
 
-Selecione:
+Escolha:
 
 ```text
 /usr/lib/jvm/java-17-openjdk-amd64/bin/java
 ```
 
-Depois verifique novamente:
+Depois confirme:
 
 ```bash
 java -version
 javac -version
 ```
 
-Neste computador, o Java 21 permanece instalado, mas o Java 17 foi configurado como padrão para o ambiente de desenvolvimento.
+Os dois devem apontar para Java 17.
 
 ---
 
 # 2. Instalação do Android Studio
 
-Existem diferentes formas de instalar o Android Studio.
+Existem duas maneiras principais de instalar o Android Studio no Linux Mint.
 
-Para esta instalação específica, utilizaremos o **PPA de Maarten Fonville**, pois foi o método que funcionou corretamente no Linux Mint 22.3 utilizado neste computador.
+Neste tutorial, será utilizado o **PPA de Maarten Fonville**, pois ele permite uma instalação integrada ao sistema através do APT.
 
-## 2.1. Instalar `software-properties-common`
+## 2.1 Instalar `software-properties-common`
 
 ```bash
 sudo apt install software-properties-common -y
@@ -135,13 +118,13 @@ sudo apt install software-properties-common -y
 
 ---
 
-## 2.2. Adicionar o PPA do Android Studio
+## 2.2 Adicionar o PPA do Android Studio
 
 ```bash
 sudo add-apt-repository ppa:maarten-fonville/android-studio -y
 ```
 
-Atualize a lista de pacotes:
+Atualize as informações dos repositórios:
 
 ```bash
 sudo apt update
@@ -149,194 +132,353 @@ sudo apt update
 
 ---
 
-## 2.3. Instalar o Android Studio
+## 2.3 Instalar o Android Studio
 
 ```bash
 sudo apt install android-studio -y
 ```
 
-Na instalação realizada neste computador, o pacote instalado foi:
+O pacote instalará o Android Studio e fará o download da versão correspondente disponível no PPA.
+
+A instalação pode baixar mais de 1 GB, portanto o processo pode demorar dependendo da velocidade da conexão.
+
+---
+
+# 3. Primeira execução do Android Studio
+
+Depois da instalação, abra o Android Studio pelo menu de aplicativos do Linux Mint.
+
+Também é possível localizar o executável através do sistema.
+
+Na primeira execução, o Android Studio apresenta o assistente de configuração.
+
+Selecione:
 
 ```text
-android-studio 2025.2.3
+Standard
 ```
 
-A instalação baixa automaticamente o pacote completo do Android Studio durante o processo.
+Aceite as licenças solicitadas.
 
----
+Permita que o Android Studio instale os componentes necessários do SDK.
 
-## 2.4. Iniciar o Android Studio
+Entre os componentes estarão:
 
-Depois da instalação, pode-se iniciar pelo menu do Linux Mint ou pelo terminal:
-
-```bash
-android-studio
-```
-
-A primeira execução abrirá o assistente de configuração.
-
----
-
-# 3. Configuração inicial do Android Studio
-
-Na primeira execução, o Android Studio apresentará o assistente de configuração.
-
-Quando solicitado, utilize:
-
-* **Standard** installation
-* aceite os termos de licença;
-* permita a instalação dos componentes recomendados.
-
-O Android Studio poderá instalar componentes como:
-
-* Android SDK
-* Android SDK Platform
-* Android SDK Platform-Tools
-* Android SDK Build-Tools
-* Android Emulator
+* Android SDK;
+* Android SDK Platform;
+* Android SDK Build-Tools;
+* Android SDK Platform-Tools;
+* Android Emulator;
 * ferramentas adicionais necessárias ao desenvolvimento.
 
-O primeiro download pode ser bastante grande e demorar dependendo da velocidade da conexão.
-
-**Não é necessário instalar manualmente esses componentes antes do assistente.**
+A instalação inicial pode consumir vários gigabytes de armazenamento.
 
 ---
 
-# 4. Criando o primeiro projeto
+# 4. Configuração da virtualização para o Android Emulator
 
-Na tela inicial do Android Studio:
+O Android Emulator utiliza aceleração de hardware para funcionar adequadamente.
 
-1. Clique em **New Project**.
-2. Selecione **Phone and Tablet**.
-3. Selecione **Empty Activity**.
+Em computadores Intel, a tecnologia necessária é **Intel VT-x**.
 
-O modelo **Empty Activity** atual utiliza Jetpack Compose, que é a abordagem moderna para criação da interface Android.
+No Linux, essa virtualização é disponibilizada através do **KVM (Kernel-based Virtual Machine)**.
 
-Configure o projeto.
-
-### Name
+Se o Android Studio apresentar uma mensagem semelhante a:
 
 ```text
+/dev/kvm is not found.
+
+Enable VT-x in your BIOS security settings,
+ensure that your Linux distro has working KVM module.
+```
+
+é necessário verificar a virtualização antes de tentar solucionar problemas no Android Studio.
+
+---
+
+## 4.1 Verificar se o Linux detecta VT-x
+
+Execute:
+
+```bash
+egrep -c '(vmx|svm)' /proc/cpuinfo
+```
+
+Em um processador Intel com VT-x disponível, o resultado deverá ser maior que:
+
+```text
+0
+```
+
+Se aparecer:
+
+```text
+0
+```
+
+o Linux não está detectando a extensão de virtualização.
+
+---
+
+# 5. Habilitar Intel VT-x no BIOS/UEFI
+
+Reinicie o computador:
+
+```bash
+sudo reboot
+```
+
+Durante a inicialização, pressione repetidamente:
+
+```text
+F1
+```
+
+para entrar no BIOS/UEFI.
+
+Procure uma seção semelhante a:
+
+```text
+Security
+```
+
+e, dentro dela, uma configuração relacionada a:
+
+```text
+Virtualization
+```
+
+ou:
+
+```text
+Intel Virtualization Technology
+```
+
+Configure:
+
+```text
+Intel Virtualization Technology → Enabled
+```
+
+Não confunda essa configuração com outras tecnologias de virtualização, como VT-d.
+
+Depois salve as alterações, normalmente através de:
+
+```text
+F10
+```
+
+e confirme.
+
+O computador será reiniciado.
+
+---
+
+# 6. Verificar o KVM no Linux
+
+Depois que o Linux Mint iniciar novamente, verifique:
+
+```bash
+egrep -c '(vmx|svm)' /proc/cpuinfo
+```
+
+O resultado agora deve ser maior que zero.
+
+Em um processador com múltiplas threads, o comando poderá apresentar um número correspondente ao número de processadores lógicos.
+
+---
+
+## 6.1 Verificar `/dev/kvm`
+
+Execute:
+
+```bash
+ls -l /dev/kvm
+```
+
+O resultado esperado será semelhante a:
+
+```text
+crw-rw----+ 1 root kvm ... /dev/kvm
+```
+
+Se aparecer:
+
+```text
+ls: não foi possível acessar '/dev/kvm': Arquivo ou diretório inexistente
+```
+
+o KVM ainda não está disponível.
+
+---
+
+## 6.2 Verificar os módulos KVM
+
+Execute:
+
+```bash
+lsmod | grep kvm
+```
+
+Em um sistema Intel, normalmente aparecerá algo semelhante a:
+
+```text
+kvm_intel
+kvm
+```
+
+---
+
+## 6.3 Instalar o `kvm-ok`
+
+Instale:
+
+```bash
+sudo apt install -y cpu-checker
+```
+
+Depois execute:
+
+```bash
+kvm-ok
+```
+
+O resultado esperado é:
+
+```text
+INFO: /dev/kvm exists
+KVM acceleration can be used
+```
+
+Quando essas condições forem satisfeitas, o Android Emulator poderá utilizar aceleração KVM.
+
+---
+
+# 7. Criando o primeiro projeto
+
+Abra o Android Studio.
+
+Na tela inicial:
+
+```text
+New Project
+```
+
+Selecione:
+
+```text
+Phone and Tablet
+```
+
+Depois:
+
+```text
+Empty Activity
+```
+
+O modelo **Empty Activity** utiliza Jetpack Compose e é uma boa opção para iniciar um projeto Android moderno.
+
+---
+
+## 7.1 Configuração do projeto
+
+Utilize, por exemplo:
+
+```text
+Name:
 MeuPrimeiroApp
 ```
 
-ou outro nome desejado.
-
-### Package name
-
-Por exemplo:
+Package name:
 
 ```text
 com.seunome.meuprimeiroapp
 ```
 
-Utilize o padrão de nomeação reversa de domínio.
-
-### Save location
-
-Por exemplo:
+Escolha uma pasta de projeto, por exemplo:
 
 ```text
 ~/AndroidStudioProjects
 ```
 
-### Language
+Configure:
 
 ```text
+Language:
 Kotlin
 ```
 
-### Minimum SDK
+Escolha a versão mínima do Android conforme o público-alvo do aplicativo.
 
-Pode-se utilizar:
+Por exemplo:
 
 ```text
+Minimum SDK:
 API 24
 ```
 
-ou superior.
+ou uma versão superior.
 
-Para projetos direcionados a versões Android mais recentes, pode ser conveniente utilizar uma API mínima mais alta.
-
-### Build configuration language
+Para a linguagem de configuração do Gradle:
 
 ```text
 Kotlin DSL
 ```
 
-Depois clique em:
+é uma escolha recomendada.
 
-**Finish**
+Clique em:
+
+```text
+Finish
+```
+
+O Gradle fará a sincronização e poderá baixar várias dependências.
+
+A primeira sincronização pode demorar.
 
 ---
 
-# 5. Primeira sincronização do Gradle
+# 8. Estrutura básica do projeto
 
-Após a criação do projeto, o Android Studio executará a sincronização do Gradle.
-
-Durante esse processo poderão ser baixados:
-
-* Gradle;
-* Android Gradle Plugin;
-* bibliotecas Kotlin;
-* Jetpack Compose;
-* Material 3;
-* dependências do projeto;
-* componentes do Android SDK.
-
-Na primeira execução, esse processo pode demorar consideravelmente mais do que nas seguintes.
-
-Aguarde a conclusão da sincronização.
-
----
-
-# 6. Estrutura básica do projeto
-
-No painel **Project**, você encontrará arquivos e diretórios semelhantes aos seguintes:
+No painel **Project**, a estrutura principal será semelhante a:
 
 ```text
-MeuPrimeiroApp/
-├── app/
-│   ├── build.gradle.kts
-│   └── src/
-│       └── main/
-│           ├── AndroidManifest.xml
-│           ├── java/
-│           │   └── com/
-│           │       └── seunome/
-│           │           └── meuprimeiroapp/
-│           │               └── MainActivity.kt
-│           └── res/
-├── build.gradle.kts
-├── settings.gradle.kts
-└── gradlew
+app/
+└── src/
+    └── main/
+        ├── java/
+        │   └── ...
+        │       └── MainActivity.kt
+        │
+        └── res/
 ```
 
-O arquivo principal da aplicação será:
+Os principais arquivos são:
 
 ```text
-app/src/main/java/.../MainActivity.kt
+MainActivity.kt
 ```
 
-O arquivo:
+Código principal da Activity.
 
 ```text
 app/build.gradle.kts
 ```
 
-contém configurações importantes do módulo do aplicativo.
-
-O projeto também possui o **Gradle Wrapper**:
+Configurações de build do módulo do aplicativo.
 
 ```text
-gradlew
+res/
 ```
 
-Isso permite executar o sistema de build diretamente pelo projeto, sem depender necessariamente de uma instalação global do Gradle.
+Recursos do aplicativo.
+
+Projetos modernos utilizando Compose podem concentrar grande parte da interface diretamente nos arquivos Kotlin.
 
 ---
 
-# 7. Modificando o aplicativo
+# 9. Primeiro código em Kotlin + Jetpack Compose
 
 Abra:
 
@@ -344,7 +486,7 @@ Abra:
 MainActivity.kt
 ```
 
-Um projeto Compose pode conter código semelhante a:
+Um exemplo simples é:
 
 ```kotlin
 package com.seunome.meuprimeiroapp
@@ -404,64 +546,223 @@ Salve:
 Ctrl + S
 ```
 
-O Android Studio poderá recompilar ou sincronizar o projeto conforme as alterações realizadas.
+O Android Studio poderá recompilar automaticamente o projeto.
 
 ---
 
-# 8. Executando o aplicativo
+# 10. Executando o aplicativo
 
-Existem duas maneiras principais de executar o aplicativo.
+Existem duas maneiras principais de testar o aplicativo:
 
-## Opção A — Android Emulator
-
-1. Abra o **Device Manager**.
-2. Crie um dispositivo virtual.
-3. Escolha um modelo de telefone.
-4. Selecione uma imagem do Android disponível.
-5. Inicie o dispositivo virtual.
-6. Clique em **Run** (▶).
-
-O Android Studio compilará o projeto e instalará o aplicativo automaticamente.
-
-### Observação para o ThinkPad T420
-
-O T420 possui hardware suficiente para o desenvolvimento Android, mas sua GPU Intel HD Graphics 3000 é antiga.
-
-Portanto, o emulador pode apresentar desempenho inferior ao de computadores modernos.
-
-Isso **não impede o desenvolvimento nem a geração do APK**.
+1. Android Emulator;
+2. dispositivo Android físico.
 
 ---
 
-## Opção B — Dispositivo Android físico
+# 11. Opção A — Android Emulator
 
-Esta é uma alternativa especialmente útil para testar o aplicativo diretamente em um smartphone.
+No Android Studio abra:
 
-No celular:
+```text
+Tools → Device Manager
+```
 
-1. Abra **Configurações**.
-2. Entre em **Sobre o telefone**.
-3. Toque várias vezes em **Número da versão** para habilitar as opções do desenvolvedor.
-4. Abra **Opções do desenvolvedor**.
-5. Ative **Depuração USB**.
-6. Conecte o celular ao computador por USB.
-7. Autorize a depuração quando o Android solicitar.
+ou utilize o ícone correspondente na interface.
 
-O Android Studio deverá reconhecer o dispositivo.
+Selecione:
 
-Selecione o celular na lista de dispositivos e pressione:
+```text
+Create Virtual Device
+```
 
-**Run ▶**
+Escolha um dispositivo, por exemplo:
+
+```text
+Small Phone
+```
+
+ou outro modelo compatível.
+
+Escolha uma imagem do Android.
+
+Por exemplo:
+
+```text
+API 37.1
+x86_64
+```
+
+Baixe a imagem caso ela ainda não esteja instalada.
+
+Depois crie o dispositivo virtual.
 
 ---
 
-# 9. Gerando o APK
+## 11.1 Iniciar o AVD
+
+No Device Manager, clique em:
+
+```text
+Start
+```
+
+ou no botão de execução correspondente.
+
+Com o KVM corretamente configurado, o emulador poderá utilizar aceleração de hardware.
+
+---
+
+## 11.2 Caso apareça `/dev/kvm is not found`
+
+Execute novamente:
+
+```bash
+egrep -c '(vmx|svm)' /proc/cpuinfo
+```
+
+Depois:
+
+```bash
+ls -l /dev/kvm
+```
+
+Depois:
+
+```bash
+lsmod | grep kvm
+```
+
+E:
+
+```bash
+kvm-ok
+```
+
+O estado ideal é:
+
+```text
+vmx > 0
+```
+
+```text
+/dev/kvm existe
+```
+
+```text
+kvm_intel
+kvm
+```
+
+e:
+
+```text
+KVM acceleration can be used
+```
+
+---
+
+# 12. Executar o aplicativo no emulador
+
+Depois que o AVD estiver funcionando:
+
+1. Abra o projeto;
+2. Selecione o dispositivo virtual na barra superior;
+3. Clique no botão:
+
+```text
+Run ▶
+```
+
+ou pressione:
+
+```text
+Shift + F10
+```
+
+O Android Studio irá:
+
+1. compilar o aplicativo;
+2. iniciar o Gradle;
+3. gerar o APK de teste;
+4. iniciar o emulador;
+5. instalar o aplicativo;
+6. executar o aplicativo.
+
+---
+
+# 13. Opção B — dispositivo Android físico
+
+Também é possível testar diretamente em um smartphone.
+
+No Android:
+
+```text
+Configurações
+→ Sobre o telefone
+```
+
+Toque aproximadamente sete vezes em:
+
+```text
+Número da versão
+```
+
+até habilitar as opções de desenvolvedor.
+
+Depois entre em:
+
+```text
+Opções do desenvolvedor
+```
+
+e habilite:
+
+```text
+Depuração USB
+```
+
+Conecte o smartphone ao computador utilizando USB.
+
+Quando o Android perguntar se deseja autorizar a depuração USB, aceite.
+
+---
+
+# 14. Verificar o dispositivo com ADB
+
+O Android SDK Platform-Tools fornece o `adb`.
+
+Verifique:
+
+```bash
+adb version
+```
+
+Depois:
+
+```bash
+adb devices
+```
+
+Um dispositivo conectado deverá aparecer semelhante a:
+
+```text
+List of devices attached
+XXXXXXXX    device
+```
+
+Se aparecer:
+
+```text
+unauthorized
+```
+
+desbloqueie o celular e aceite a autorização de depuração USB.
+
+---
+
+# 15. Gerando o APK de Debug
 
 Depois de desenvolver o aplicativo, podemos gerar o APK.
-
-## 9.1. APK de Debug
-
-O APK de debug é adequado para testes.
 
 No Android Studio:
 
@@ -471,9 +772,9 @@ Build
 → Build APK(s)
 ```
 
-Também é possível utilizar o terminal.
+Também é possível fazer pelo terminal.
 
-Entre no diretório do projeto:
+Entre na pasta do projeto:
 
 ```bash
 cd ~/AndroidStudioProjects/MeuPrimeiroApp
@@ -493,112 +794,15 @@ app/build/outputs/apk/debug/app-debug.apk
 
 ---
 
-# 10. Gerando APK Release assinado
+# 16. Instalar o APK diretamente pelo ADB
 
-Para distribuição real, deve-se gerar uma versão **Release** assinada.
-
-No Android Studio:
-
-```text
-Build
-→ Generate Signed Bundle / APK
-```
-
-Escolha:
-
-```text
-APK
-```
-
-Crie um novo **keystore** quando necessário.
-
-Guarde cuidadosamente:
-
-* arquivo `.jks`;
-* alias;
-* senha do keystore;
-* senha da chave.
-
-Essas informações são importantes porque a mesma chave deverá ser utilizada para futuras atualizações do aplicativo.
-
-Selecione:
-
-```text
-release
-```
-
-e conclua o processo.
-
-O APK de release será normalmente encontrado em:
-
-```text
-app/build/outputs/apk/release/
-```
-
----
-
-# 11. Android App Bundle
-
-Também é possível gerar:
-
-```text
-.aab
-```
-
-O **Android App Bundle** é o formato normalmente utilizado para publicação na Google Play.
-
-No Android Studio:
-
-```text
-Build
-→ Generate Signed Bundle / APK
-→ Android App Bundle
-```
-
-Para testes e instalação direta no aparelho, o APK continua sendo bastante útil.
-
----
-
-# 12. Instalando o APK no celular
-
-Uma maneira simples é transferir o APK para o aparelho utilizando:
-
-* cabo USB;
-* armazenamento em nuvem;
-* e-mail;
-* outro método de transferência.
-
-No Android, pode ser necessário autorizar a instalação de aplicativos provenientes daquela fonte.
-
-Depois, abra o arquivo APK e faça a instalação.
-
----
-
-# 13. Instalando pelo ADB
-
-Para utilizar o ADB, primeiro confirme que o Android SDK Platform-Tools está instalado.
-
-Depois, conecte o celular por USB e execute:
-
-```bash
-adb devices
-```
-
-O dispositivo deverá aparecer na lista.
-
-Para instalar o APK:
-
-```bash
-adb install caminho/do/app-debug.apk
-```
-
-Por exemplo:
+Com o telefone conectado:
 
 ```bash
 adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Se o aplicativo já estiver instalado e for necessário substituí-lo:
+Se o APK já estiver instalado e for necessário substituí-lo:
 
 ```bash
 adb install -r app/build/outputs/apk/debug/app-debug.apk
@@ -606,125 +810,293 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 ---
 
-# 14. Fluxo completo do desenvolvimento
+# 17. Gerando APK Release assinado
 
-Depois que o ambiente estiver configurado, o processo básico será:
+Para distribuir o aplicativo, utilize uma versão de release assinada.
+
+No Android Studio:
 
 ```text
-Android Studio
-      │
-      ▼
-Criar projeto Kotlin
-      │
-      ▼
-Escrever código
-      │
-      ▼
-Gradle
-      │
-      ▼
-Compilar
-      │
-      ▼
-APK Debug
-      │
-      ├──────────────► Testar no celular
-      │
-      └──────────────► Testar no emulador
-      │
-      ▼
-Corrigir / desenvolver
-      │
-      ▼
-Build Release
-      │
-      ▼
-Assinar APK
-      │
-      ▼
-APK Release
+Build
+→ Generate Signed Bundle / APK
+```
+
+Selecione:
+
+```text
+APK
+```
+
+Crie um novo keystore caso ainda não tenha um.
+
+O arquivo de keystore deve ser guardado com segurança.
+
+As informações necessárias para assinar o aplicativo incluem:
+
+* localização do keystore;
+* senha;
+* alias;
+* senha do alias.
+
+**Não perca o keystore.**
+
+Para atualizações futuras do aplicativo, a mesma identidade de assinatura deverá ser preservada.
+
+Escolha:
+
+```text
+release
+```
+
+e conclua o processo.
+
+O APK será colocado normalmente em:
+
+```text
+app/build/outputs/apk/release/
 ```
 
 ---
 
-# 15. Ferramentas utilizadas
+# 18. Android App Bundle
 
-A instalação atual utiliza:
-
-### Sistema operacional
+Também é possível gerar um:
 
 ```text
-Linux Mint 22.3 Zena
-Ubuntu 24.04 Noble
-x86_64
+.aab
 ```
 
-### Java
+através de:
 
 ```text
-OpenJDK 17.0.19
+Build
+→ Generate Signed Bundle / APK
+→ Android App Bundle
 ```
 
-Verificação:
+O Android App Bundle é o formato utilizado para distribuição pela Google Play.
+
+---
+
+# 19. Instalação manual do APK
+
+Para transferir o APK para o telefone, pode-se utilizar:
+
+* USB;
+* armazenamento local;
+* e-mail;
+* nuvem;
+* ADB.
+
+Depois de transferido, abra o APK no dispositivo.
+
+Dependendo da versão do Android, pode ser necessário permitir:
+
+```text
+Instalar apps desconhecidos
+```
+
+para o aplicativo utilizado para abrir o APK.
+
+---
+
+# 20. Fluxo completo de desenvolvimento
+
+Depois que todo o ambiente estiver configurado, o ciclo normal de desenvolvimento será:
+
+```text
+Criar projeto
+      ↓
+Escrever código Kotlin
+      ↓
+Construir interface com Jetpack Compose
+      ↓
+Sincronizar Gradle
+      ↓
+Executar no Emulator ou celular
+      ↓
+Testar
+      ↓
+Corrigir código
+      ↓
+Testar novamente
+      ↓
+Gerar APK Debug
+      ↓
+Testar versão final
+      ↓
+Gerar APK Release assinado
+```
+
+---
+
+# 21. Comandos principais
+
+### Verificar Java
 
 ```bash
 java -version
+```
+
+```bash
 javac -version
 ```
 
-### Android Studio
+### Verificar VT-x
 
-```text
-Android Studio 2025.2.3
+```bash
+egrep -c '(vmx|svm)' /proc/cpuinfo
 ```
 
-Instalado através do PPA:
+### Verificar KVM
+
+```bash
+ls -l /dev/kvm
+```
+
+```bash
+lsmod | grep kvm
+```
+
+### Verificar aceleração
+
+```bash
+kvm-ok
+```
+
+### Verificar ADB
+
+```bash
+adb devices
+```
+
+### Compilar APK Debug
+
+```bash
+./gradlew assembleDebug
+```
+
+### Instalar APK
+
+```bash
+adb install app/build/outputs/apk/debug/app-debug.apk
+```
+
+---
+
+# 22. Próximas etapas do desenvolvimento
+
+Depois de conseguir criar, executar e gerar o primeiro APK, o próximo passo é aprender progressivamente:
+
+1. Kotlin;
+2. Jetpack Compose;
+3. Material 3;
+4. navegação entre telas;
+5. gerenciamento de estado;
+6. ViewModel;
+7. armazenamento local;
+8. Room;
+9. consumo de APIs;
+10. permissões Android;
+11. notificações;
+12. arquivos e armazenamento;
+13. testes;
+14. geração de APK Release;
+15. Android App Bundle.
+
+Para projetos maiores, uma arquitetura baseada em:
+
+```text
+UI
+↓
+ViewModel
+↓
+Repository
+↓
+Data Source
+```
+
+é uma boa evolução em relação ao primeiro aplicativo.
+
+---
+
+# 23. Observações importantes
+
+## Java
+
+Utilize o **OpenJDK**, preferencialmente a versão compatível com a versão do Android Studio e do Gradle utilizada pelo projeto.
+
+Neste ambiente, o OpenJDK 17 foi configurado e validado.
+
+## Android Studio
+
+O Android Studio é gratuito para desenvolvimento Android.
+
+A instalação deste tutorial utiliza o PPA:
 
 ```text
 ppa:maarten-fonville/android-studio
 ```
 
-### Linguagem
+## Emulator
 
-```text
-Kotlin
+O Android Emulator pode ser pesado para computadores mais antigos.
+
+A utilização de **KVM + Intel VT-x** é importante para obter aceleração adequada.
+
+Em computadores com recursos limitados, testar diretamente em um dispositivo Android físico pode ser uma alternativa mais leve.
+
+## Dependências 32-bit
+
+A tentativa inicial de instalar:
+
+```bash
+libncurses5:i386
 ```
 
-### Build system
+não é necessária neste ambiente e pode resultar em:
 
 ```text
-Gradle
+E: Impossível encontrar o pacote libncurses5:i386
 ```
 
-### Interface
+Portanto, não é necessário incluir esse pacote na instalação básica deste tutorial.
+
+O próprio pacote do Android Studio instalado pelo PPA apresentou como sugestões:
 
 ```text
-Jetpack Compose
+libc6-i386
+lib32z1
 ```
 
-### Ferramentas Android
-
-```text
-Android SDK
-Android SDK Platform-Tools
-Android SDK Build-Tools
-ADB
-Android Emulator
-```
+Essas dependências podem ser instaladas posteriormente somente se algum componente específico exigir.
 
 ---
 
-# 16. Dicas importantes
+# 24. Objetivo final
 
-* Utilize **OpenJDK**, evitando a necessidade de Oracle JDK.
-* Nesta instalação, mantenha **Java 17** como versão padrão.
-* Não instale bibliotecas 32-bit desnecessariamente.
-* `libncurses5:i386` não está disponível nos repositórios padrão desta instalação do Linux Mint 22.3.
-* Dependências adicionais devem ser instaladas somente quando forem efetivamente necessárias.
-* Mantenha o Android Studio e o Android SDK atualizados, mas evite instalar várias versões desnecessárias do SDK.
-* Faça backups do arquivo `.jks` e das respectivas credenciais.
-* Nunca perca a chave utilizada para assinar um aplicativo que você pretende atualizar futuramente.
-* Para projetos maiores, estude **Jetpack Compose, ViewModel, Room, Navigation, coroutines, Retrofit e arquitetura MVVM**.
-* O Gradle Wrapper (`./gradlew`) deve ser preferido para compilar o projeto, pois utiliza a versão de Gradle definida pelo próprio projeto.
-* O Android Studio é a opção mais conveniente para começar, embora projetos Android também possam ser compilados utilizando as ferramentas de linha de comando.
-* Alternativas como Kivy e Flutter existem, mas este tutorial utiliza o desenvolvimento Android nativo com Kotlin.
+Ao completar este tutorial, o ambiente estará preparado para:
+
+```text
+Linux Mint
+    ↓
+OpenJDK 17
+    ↓
+Android Studio
+    ↓
+Android SDK
+    ↓
+Kotlin
+    ↓
+Gradle
+    ↓
+Jetpack Compose
+    ↓
+Android Emulator / smartphone físico
+    ↓
+APK Debug
+    ↓
+APK Release assinado
+```
+
+A partir daqui, o desenvolvimento pode deixar de ser apenas um teste de ambiente e passar para a construção efetiva do aplicativo Android.
