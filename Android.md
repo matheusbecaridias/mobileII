@@ -15,7 +15,6 @@ sudo apt update && sudo apt upgrade -y
 Instale as dependências necessárias:
 
 ```bash
-sudo apt update
 sudo apt install -y openjdk-17-jdk openjdk-17-jre
 ```
 
