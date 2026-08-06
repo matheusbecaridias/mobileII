@@ -12,10 +12,11 @@ Abra o Terminal e atualize o sistema:
 sudo apt update && sudo apt upgrade -y
 ```
 
-Instale as dependências necessárias (incluindo bibliotecas 32-bit que o emulador e as build-tools precisam) e o OpenJDK:
+Instale as dependências necessárias:
 
 ```bash
-sudo apt install -y openjdk-17-jdk openjdk-17-jre libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
+sudo apt update
+sudo apt install -y openjdk-17-jdk openjdk-17-jre
 ```
 
 Verifique o Java:
