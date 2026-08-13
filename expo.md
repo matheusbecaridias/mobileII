@@ -1,165 +1,182 @@
-# 📱 Tutorial: Criando um Projeto com Expo Go
+# 🚀 Tutorial: Configuração de Ambiente para Desenvolvimento com Expo
 
-## Pré-requisitos
-
-Antes de começar, certifique-se de ter instalado:
-- **Node.js** (versão 16 ou superior)
-- **npm** ou **yarn**
-- **Expo CLI** (instalado globalmente)
-- Um emulador ou dispositivo físico com o app **Expo Go** instalado
+## 📋 Índice
+1. [Pré-requisitos](#pré-requisitos)
+2. [Instalação do Node.js e npm](#instalação-do-nodejs-e-npm)
+3. [Configuração do Expo](#configuração-do-expo)
+4. [Criação do Projeto](#criação-do-projeto)
+5. [Estrutura do Projeto](#estrutura-do-projeto)
+6. [Comandos Úteis](#comandos-úteis)
+7. [Solução de Problemas](#solução-de-problemas)
+8. [Dicas e Boas Práticas](#dicas-e-boas-práticas)
 
 ---
 
-## 🚀 Passo 1: Instalar o Expo CLI
-```
-# Atualizar npm
-npm install -g npm@latest
+## 🎯 Pré-requisitos
 
-# Atualizar Expo CLI
+### Sistema Operacional
+- **Windows**: Windows 10/11
+- **macOS**: 10.14 (Mojave) ou superior
+- **Linux**: Ubuntu 18.04 ou superior
+
+### Ferramentas Necessárias
+- Node.js (versão 16 ou superior)
+- npm ou yarn
+- Editor de código (VS Code recomendado)
+- Expo Go App (no dispositivo móvel)
+
+---
+
+## 📦 Passo 1: Instalação do Node.js e npm
+
+### Opção 1: Usando o Node Version Manager (NVM) - RECOMENDADO
+
+#### Instalar NVM
+```bash
+# Linux/macOS
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+# Ou via wget
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+# Reiniciar o terminal
+source ~/.bashrc  # ou source ~/.zshrc
+```
+
+#### Instalar Node.js
+```bash
+# Instalar a versão LTS mais recente
+nvm install --lts
+
+# Ou instalar versão específica
+nvm install 18.0.0
+
+# Definir como padrão
+nvm alias default node
+
+# Verificar instalação
+node --version  # v18.x.x
+npm --version   # 8.x.x ou superior
+```
+
+### Opção 2: Download Direto do Site Oficial
+
+#### Para Windows:
+1. Acesse [nodejs.org](https://nodejs.org)
+2. Baixe o instalador LTS
+3. Execute o instalador e siga as instruções
+4. Marque a opção "Add to PATH"
+
+#### Para macOS:
+```bash
+# Usando Homebrew
+brew install node
+```
+
+#### Para Linux (Ubuntu/Debian):
+```bash
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+---
+
+## 🛠️ Passo 2: Configuração do Expo
+
+### 2.1 Instalar Expo CLI (Método Antigo - Não Recomendado)
+```bash
 npm install -g expo-cli@latest
+```
+⚠️ **ATENÇÃO**: Este método está deprecado! Use `npx expo` ou `create-expo-app`.
 
-# Ou instalar o pacote create-expo-app globalmente
+### 2.2 Método Moderno (Recomendado)
+
+#### Instalar create-expo-app globalmente
+```bash
 npm install -g create-expo-app
-
-```
-Verifique a instalação:
-
-```bash
-expo --version
 ```
 
----
-
-## 🛠️ Passo 2: Criar um Novo Projeto
-
-### Opção 1: Projeto com Template Padrão
+#### Ou usar diretamente com npx
 ```bash
+# Não precisa instalar globalmente
 npx create-expo-app meu-app
 ```
 
-### Opção 2: Projeto com Template TypeScript
+### 2.3 Verificar Instalação
 ```bash
-npx create-expo-app meu-app --template
-```
+# Verificar se o Expo está instalado
+npx expo --version
 
-### Opção 3: Projeto Minimalista (sem dependências extras)
-```bash
-npx create-expo-app meu-app --template blank
-```
-
----
-
-## 📂 Passo 3: Acessar o Diretório do Projeto
-
-```bash
-cd meu-app
+# Verificar versão do create-expo-app
+npx create-expo-app --version
 ```
 
 ---
 
-## 📦 Passo 4: Instalar Dependências (se necessário)
+## 🚀 Passo 3: Criação do Projeto
 
+### 3.1 Criar Projeto JavaScript Puro
+
+#### Opção 1: Usando create-expo-app
+```bash
+npx create-expo-app@latest to-do-list --template blank
+```
+
+#### Opção 2: Usando o template explícito
+```bash
+npx create-expo-app to-do-list --template @expo/blank@latest
+```
+
+#### Opção 3: Com navegação (tabs)
+```bash
+npx create-expo-app to-do-list --template tabs
+```
+
+### 3.2 Navegar para o Projeto
+```bash
+cd to-do-list
+```
+
+### 3.3 Instalar Dependências
 ```bash
 npm install
 ```
 
-ou
-
+### 3.4 Verificar Saúde do Projeto
 ```bash
-yarn install
+npx expo doctor
 ```
 
 ---
 
-## 🎯 Passo 5: Iniciar o Projeto
-
-### Iniciar com Expo
-```bash
-npx expo start
-```
-
-### Iniciar com yarn
-```bash
-yarn start
-```
-
-### Iniciar com npm
-```bash
-npm start
-```
-
----
-
-## 📱 Passo 6: Executar em Dispositivos
-
-### No Emulador Android
-```bash
-npx expo start --android
-```
-
-### No Simulador iOS (apenas Mac)
-```bash
-npx expo start --ios
-```
-
-### No Navegador (Web)
-```bash
-npx expo start --web
-```
-
----
-
-## 🔧 Passo 7: Comandos Úteis
-
-### Limpar Cache
-```bash
-npx expo start -c
-```
-
-### Build para Produção
-```bash
-npx expo build:android
-npx expo build:ios
-```
-
-### Executar no Modo Desenvolvimento
-```bash
-npx expo start --dev
-```
-
-### Exportar para Produção
-```bash
-npx expo export
-```
-
----
-
-## 🏗️ Estrutura do Projeto Criada
+## 📂 Passo 4: Estrutura do Projeto Criado
 
 ```
-meu-app/
-├── .expo/           # Arquivos de configuração do Expo
-├── .gitignore       # Arquivos ignorados pelo Git
-├── App.js           # Componente principal
-├── app.json         # Configurações do app
-├── babel.config.js  # Configuração do Babel
-├── package.json     # Dependências e scripts
-├── node_modules/    # Dependências instaladas
-└── assets/          # Recursos (imagens, fontes, etc.)
+to-do-list/
+├── .expo/              # Configurações do Expo
+│   ├── packager-info.json
+│   └── settings.json
+├── .gitignore          # Arquivos ignorados pelo Git
+├── App.js              # Componente principal (JS)
+├── app.json            # Configurações do app
+├── assets/             # Recursos (imagens, fontes)
+│   ├── icon.png
+│   └── splash.png
+├── babel.config.js     # Configuração do Babel
+├── package.json        # Dependências e scripts
+└── node_modules/       # Dependências instaladas
 ```
 
----
-
-## 📝 Exemplo de App.js
-
-```jsx
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+### Conteúdo do App.js
+```javascript
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Hello Expo!</Text>
+      <Text>Open up App.js to start working on your app!</Text>
+      <StatusBar style="auto" />
     </View>
   );
 }
@@ -167,51 +184,66 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#fff',
     alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    justifyContent: 'center',
   },
 });
 ```
 
 ---
 
-## 🧹 Passo 8: Limpeza e Otimização
+## 🎯 Passo 5: Comandos Úteis
 
-### Remover arquivos não utilizados
+### 5.1 Iniciar o Projeto
 ```bash
-rm -rf .expo
+# Iniciar normalmente
+npm start
+
+# Ou usando npx
+npx expo start
+
+# Com cache limpo
+npx expo start -c
 ```
 
-### Reinstalar dependências
+### 5.2 Executar em Diferentes Plataformas
 ```bash
-rm -rf node_modules package-lock.json
-npm install
+# Android
+npm run android
+
+# iOS (apenas macOS)
+npm run ios
+
+# Web
+npm run web
+```
+
+### 5.3 Gerenciamento do Projeto
+```bash
+# Verificar dependências
+npm audit
+
+# Corrigir vulnerabilidades
+npm audit fix
+
+# Atualizar dependências
+npx expo install expo@latest
+
+# Limpar cache do projeto
+npx expo start -c
 ```
 
 ---
 
-## 🚦 Solução de Problemas Comuns
+## 🔧 Passo 6: Configuração do Ambiente de Desenvolvimento
 
-### Erro: "Cannot find module 'expo'"
-```bash
-npm install expo
-```
+### 6.1 Configurar Emulador Android
 
-### Erro: "Porta já está em uso"
-```bash
-npx expo start --port 19000
-```
-
-### Erro: "Metro bundler não inicia"
-```bash
-npx expo start -c
-```
-
-### Erro: "Android SDK não encontrado"
+#### Instalar Android Studio
+1. Baixe em [developer.android.com/studio](https://developer.android.com/studio)
+2. Instale e configure o SDK
+3. Adicione ao PATH:
 ```bash
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
@@ -220,37 +252,201 @@ export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 ```
 
+#### Criar um Emulador
+1. Abra o Android Studio
+2. Clique em "AVD Manager"
+3. Clique em "Create Virtual Device"
+4. Escolha um dispositivo e sistema operacional
+5. Inicie o emulador
+
+### 6.2 Configurar VS Code (Recomendado)
+
+#### Extensões Essenciais
+```bash
+# Instalar via terminal
+code --install-extension ms-vscode.vscode-typescript-next
+code --install-extension msjsdiag.vscode-react-native
+code --install-extension dsznajder.es7-react-js-snippets
+code --install-extension esbenp.prettier-vscode
+code --install-extension bradlc.vscode-tailwindcss
+```
+
+#### Configuração do Prettier (.prettierrc)
+```json
+{
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false
+}
+```
+
 ---
 
-## 📌 Dicas Importantes
+## 🚨 Passo 7: Solução de Problemas Comuns
 
-1. **Instale o Expo Go** no seu dispositivo físico para testar rapidamente
-2. **Use o QR Code** gerado pelo `expo start` para abrir no dispositivo
-3. **Ative o modo desenvolvedor** no Android para usar o Expo Go
-4. **Mantenha o Node.js atualizado** para evitar problemas de compatibilidade
-5. **Use o comando `expo doctor`** para verificar problemas no projeto
+### 7.1 Erro: "npm error code EBADENGINE"
+
+**Causa**: Versão do Node.js incompatível
+```bash
+# Solução: Usar nvm para mudar versão
+nvm install 18.0.0
+nvm use 18.0.0
+
+# Verificar versão
+node --version
+```
+
+### 7.2 Erro: "npm pack @expo/blank@latest --dry-run --json exited with non-zero code: 1"
+
+**Solução**:
+```bash
+# Limpar cache
+npm cache clean --force
+
+# Tentar novamente
+npx create-expo-app to-do-list --template blank
+```
+
+### 7.3 Erro: "Metro bundler não inicia"
+
+```bash
+# Limpar cache do Metro
+npx expo start -c
+
+# Ou
+watchman watch-del-all
+npx expo start -c
+```
+
+### 7.4 Erro: "Porta 19000 já está em uso"
+
+```bash
+# Usar porta diferente
+npx expo start --port 19001
+
+# Ou matar o processo na porta
+# Linux/macOS
+lsof -ti:19000 | xargs kill -9
+# Windows
+netstat -ano | findstr :19000
+taskkill /PID [PID] /F
+```
+
+### 7.5 Erro: "Cannot find module 'expo'"
+
+```bash
+# Instalar expo
+npm install expo
+
+# Ou reinstalar todas dependências
+rm -rf node_modules package-lock.json
+npm install
+```
 
 ---
 
-## 🔗 Links Úteis
+## 💡 Passo 8: Dicas e Boas Práticas
 
-- [Documentação Oficial do Expo](https://docs.expo.dev/)
-- [Expo Go na Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent)
-- [Expo Go na App Store](https://apps.apple.com/app/expo-go/id982107779)
-- [Snack - Editor Online do Expo](https://snack.expo.dev/)
+### 8.1 Scripts do package.json
+```json
+{
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build": "expo export",
+    "clean": "expo start -c",
+    "doctor": "expo doctor",
+    "upgrade": "expo upgrade"
+  }
+}
+```
+
+### 8.2 Estrutura de Pastas Recomendada
+```
+src/
+├── components/    # Componentes reutilizáveis
+├── screens/       # Telas da aplicação
+├── navigation/    # Configuração de navegação
+├── hooks/         # Hooks customizados
+├── context/       # Context API
+├── utils/         # Funções utilitárias
+├── constants/     # Constantes
+└── styles/        # Estilos compartilhados
+```
+
+### 8.3 .gitignore
+```
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+```
+
+### 8.4 Variáveis de Ambiente
+```bash
+# .env
+EXPO_PUBLIC_API_URL=http://localhost:3000
+EXPO_PUBLIC_GOOGLE_MAPS_KEY=your_key
+```
 
 ---
 
 ## ✅ Checklist de Verificação
 
-- [ ] Node.js instalado (v16+)
-- [ ] Expo CLI instalado globalmente
+- [ ] Node.js instalado (v18+)
+- [ ] npm atualizado
+- [ ] create-expo-app instalado
 - [ ] Projeto criado com sucesso
 - [ ] Dependências instaladas
-- [ ] Projeto inicia sem erros
-- [ ] App aparece no emulador/dispositivo
-- [ ] Hot reload funcionando
+- [ ] `npx expo start` funciona
+- [ ] App aparece no dispositivo/emulador
+- [ ] VS Code configurado com extensões
+- [ ] Android Studio configurado (se usar Android)
+- [ ] Expo Go instalado no dispositivo
 
 ---
 
-**🎉 Parabéns!** Seu projeto Expo está pronto para desenvolvimento!
+## 📚 Recursos Adicionais
+
+### Documentação
+- [Expo Documentation](https://docs.expo.dev/)
+- [React Native Documentation](https://reactnative.dev/docs/getting-started)
+- [Node.js Documentation](https://nodejs.org/docs/)
+
+### Comunidade
+- [Expo Forums](https://forums.expo.dev/)
+- [React Native Community](https://reactnative.dev/community)
+- [Stack Overflow Expo Tag](https://stackoverflow.com/questions/tagged/expo)
+
+### Ferramentas Úteis
+- **Snack**: Editor online do Expo - [snack.expo.dev](https://snack.expo.dev/)
+- **Expo Go**: App para testes - [Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent) | [App Store](https://apps.apple.com/app/expo-go/id982107779)
+- **Expo EAS**: Build e deploy - [docs.expo.dev/eas](https://docs.expo.dev/eas/)
+
+---
+
+## 🎉 Conclusão
+
+Seu ambiente para desenvolvimento com Expo está configurado! Agora você pode:
+
+1. Criar novos projetos com `npx create-expo-app`
+2. Desenvolver em JavaScript puro
+3. Testar em dispositivos físicos com Expo Go
+4. Usar emuladores para testes
+5. Publicar seus apps com EAS Build
+
+**Bons códigos! 🚀**
