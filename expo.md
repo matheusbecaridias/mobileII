@@ -11,11 +11,17 @@ Antes de começar, certifique-se de ter instalado:
 ---
 
 ## 🚀 Passo 1: Instalar o Expo CLI
-
-```bash
-npm install -g expo-cli
 ```
+# Atualizar npm
+npm install -g npm@latest
 
+# Atualizar Expo CLI
+npm install -g expo-cli@latest
+
+# Ou instalar o pacote create-expo-app globalmente
+npm install -g create-expo-app
+
+```
 Verifique a instalação:
 
 ```bash
