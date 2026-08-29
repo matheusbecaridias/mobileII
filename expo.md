@@ -39,7 +39,7 @@ Confirma que Node.js e npm foram instalados corretamente.
 
 ### 2.1. Criar o projeto
 ```bash
-npx create-expo-app@latest meu-app --template default@sdk-54
+npx create-expo-app@latest --template blank
 ```
 Cria um novo projeto Expo chamado `meu-app`, já usando o SDK 54.
 
