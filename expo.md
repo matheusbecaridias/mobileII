@@ -47,15 +47,22 @@ Cria um novo projeto Expo chamado `meu-app`, já usando o SDK 54.
 
 O projeto já vem com **Expo Router** (roteamento por arquivos, semelhante ao Next.js). Estrutura básica gerada:
 ```
-meu-app/
-├── src/
-│   └── app/
-│       ├── index.tsx      # tela principal (rota "/")
-│       ├── explore.tsx    # segunda aba de exemplo
-│       └── _layout.tsx    # layout raiz, define navegação em abas
-├── assets/
+.
+├── AGENTS.md
+├── App.js
+├── app.json
+├── assets
+│   ├── favicon.png
+│   ├── icon.png
+│   └── splash-icon.png
+├── index.js
+├── LICENSE
+├── node_modules
+│   
 ├── package.json
-└── tsconfig.json
+├── package-lock.json
+└── tree.txt
+
 ```
 
 ### 2.2. Acessar a pasta do projeto
