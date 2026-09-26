@@ -1,0 +1,68 @@
+.
+├── AGENTS.md
+├── App.js
+├── app.json
+├── assets
+├── index.js
+├── LICENSE
+├── package.json
+├── package-lock.json
+├── scenes
+│   ├── Cesta
+│   │   ├── App.js
+│   │   ├── app.json
+│   │   ├── assets
+│   │   │   ├── abacate.jpg
+│   │   │   ├── adaptive-icon.png
+│   │   │   ├── banana.jpg
+│   │   │   ├── bicolor.jpg
+│   │   │   ├── favicon.png
+│   │   │   ├── frutasfeira.jpg
+│   │   │   ├── icon.png
+│   │   │   ├── Imagem de fundo feira.jpg
+│   │   │   ├── logo.jpg
+│   │   │   └── splash-icon.png
+│   │   ├── components
+│   │   │   └── Asset.Examples.js
+│   │   ├── index.js
+│   │   ├── package.json
+│   │   ├── package-lock.json
+│   │   └── src
+│   │       ├── README.md
+│   │       └── Telas
+│   ├── Login-Simples
+│   │   ├── App.js
+│   │   ├── app.json
+│   │   ├── index.js
+│   │   ├── package.json
+│   │   ├── package-lock.json
+│   │   └── README.md
+│   ├── Texto-Simples
+│   │   ├── App.js
+│   │   ├── app.json
+│   │   ├── assets
+│   │   │   ├── adaptive-icon.png
+│   │   │   ├── favicon.png
+│   │   │   ├── icon.png
+│   │   │   ├── snack-icon.png
+│   │   │   └── splash-icon.png
+│   │   ├── index.js
+│   │   ├── package.json
+│   │   └── README.md
+│   └── To-Do-List
+│       ├── App.js
+│       ├── app.json
+│       ├── assets
+│       │   ├── adaptive-icon.png
+│       │   ├── favicon.png
+│       │   ├── icon.png
+│       │   ├── snack-icon.png
+│       │   └── splash-icon.png
+│       ├── components
+│       │   └── AssetExample.js
+│       ├── index.js
+│       ├── package.json
+│       └── README.md
+└── tree
+
+14 directories, 52 files
